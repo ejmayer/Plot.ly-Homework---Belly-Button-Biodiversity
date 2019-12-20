@@ -1,15 +1,16 @@
-function drawBargraph() 
+// test bargraph function
+function drawBargraph(sampleID) 
 {
     console.log("DrawBargraph: smaple - ", sampleID);
 }
-
-
-function drawBubbleChart() 
+// test bubblechart function
+function drawBubbleChart(sampleID) 
 {
     console.log("DrawBubbleChart: sample - ", sampleID);
 }
 
-function showMetaData()
+// show data: confirm I am getting json data
+function showMetaData(sampleID)
 {
     console.log("ShowMetaData: sample - ", sampleID);
 }
@@ -18,10 +19,11 @@ function showMetaData()
 function optionChanged(newSampleID)
 {
     console.log("Dropdown changed to: ", newSampleID);
-    showMetaData(sampleID);
+    ///////////////  I am getting newSampleID - shown in console, ///////
+    ////// but not working through functions/////////////////
     drawBargraph(newSampleID);
     drawBubbleChart(newSampleID);
-    
+    showMetaData(newSampleID);
 }
 
 
@@ -30,7 +32,6 @@ function Init()
 {   
     console.log("Initializing Screen:");
     
-    
     // select dataset from dropdown select element
     var selector = d3.select("#selDataset");
 
@@ -38,17 +39,15 @@ function Init()
     d3.json("samples.json").then((data) => {
         var sampleNames = data.names;
         
-        sampleNames.forEach((sample) => {
-            selector.append("option").text(sample).property("value", sample);
+        sampleNames.forEach((sampleID) => {
+            selector.append("option").text(sample).property("value", sampleID);
 
         });
-    })
-
-
+    });
 
     sampleID = 100;
 
-
+    // show new data using each fuction
     drawBubbleChart(sampleID);
     drawBargraph(sampleID);
     showMetaData(sampleID);
