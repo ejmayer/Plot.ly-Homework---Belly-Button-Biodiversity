@@ -1,29 +1,62 @@
 // test bargraph function
-function drawBargraph(sampleID) 
+function drawBargraph(chosenSampleID) 
 {
-    console.log("DrawBargraph: smaple - ", sampleID);
+    console.log("DrawBargraph test: ", chosenSampleID);
+
+    d3.json("samples.json").then((data) => {
+
+        var samples = data.samples;
+        var resultArray = samples.filter(sampleObj => sampleObj.id == chosenSampleID);
+        var result = resultArray[0];
+        
+        var otu_ids = result.otu_ids;
+        var otu_labels = result.otu_labels;
+        var sample_values = result.sample_values;
+        
+        var yticks = otu_ids.slice(0, 10).map(otuID => `OTU ${otuID}`).reverse();
+        
+        
+        var barData = [
+            {
+                type: "bar",
+                orientation: "h",
+                x: sample_values.slice(0, 10).reverse(),
+                y: yticks,
+                text: otu_labels.slice(0, 10).reverse(),
+               
+            }
+        ];
+    
+        var barLayout = {
+            title: "Top 10 Bacteria Cultures Found",
+            margin:  {t: 30, l: 150}
+    
+        };
+    
+        Plotly.newPlot("bar", barData, barLayout); 
+    });
 }
 // test bubblechart function
-function drawBubbleChart(sampleID) 
+function drawBubbleChart(chosenSampleID) 
 {
-    console.log("DrawBubbleChart: sample - ", sampleID);
+    console.log("DrawBubbleChart test: ", chosenSampleID);
 }
 
 // show data: confirm I am getting json data
-function showMetaData(sampleID)
+function showMetaData(chosenSampleID)
 {
-    console.log("ShowMetaData: sample - ", sampleID);
+    console.log("ShowMetaData test: ", chosenSampleID);
 }
 
 
 function optionChanged(newSampleID)
 {
-    console.log("Dropdown changed to: ", newSampleID);
-    ///////////////  I am getting newSampleID - shown in console, ///////
-    ////// but not working through functions/////////////////
-    drawBargraph(newSampleID);
-    drawBubbleChart(newSampleID);
+    console.log("Dropdown reset test value: ", newSampleID);
+    
+    
     showMetaData(newSampleID);
+    drawBubbleChart(newSampleID);
+    drawBargraph(newSampleID);
 }
 
 
@@ -40,17 +73,18 @@ function Init()
         var sampleNames = data.names;
         
         sampleNames.forEach((sampleID) => {
-            selector.append("option").text(sample).property("value", sampleID);
+            selector.append("option").text(sampleID).property("value", sampleID);
 
         });
     });
 
-    sampleID = 100;
+    initializingTestValue = 1;
 
     // show new data using each fuction
-    drawBubbleChart(sampleID);
-    drawBargraph(sampleID);
-    showMetaData(sampleID);
+    drawBubbleChart(initializingTestValue);
+    showMetaData(initializingTestValue);
+    drawBargraph(initializingTestValue);
+    
    
 }
 
